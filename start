@@ -1,0 +1,17 @@
+#!/bin/bash
+dr=$(dirname $0)
+
+source $dr/funcoes.sh
+
+d=$(dispLivre)
+
+echo "disp livre=$d"
+
+xdpyinfo -display :0.0 >lixo.txt
+
+echo "XAUTHORITY=/var/run/gdm/auth-for-signey-X1h6no/database xdpyinfo -display :0.0 " >lixo.sh
+
+#startx -- :2
+bash
+echo "fechar sessão..."
+
