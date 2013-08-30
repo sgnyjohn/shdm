@@ -1,17 +1,45 @@
 #!/bin/bash
 dr=$(dirname $0)
+xtty=0
 
 source $dr/funcoes.sh
 
+if [ "$1" == "start"  ]; then
+	$0 start1 &
+	exit 0
+fi
+
+if [ "$1" != "start1"  ]; then
+	exit1
+fi
+
+
+ua=$(usuAtivo shdm)
+if [ $ua -ne -1 ]; then
+	#X shdm ativo...
+	#chvt "$((display+xtty))"
+	chvt "$ua"
+	exit 0
+fi
+
+#levanta tela logon
 d=$(dispLivre)
 
-echo "disp livre=$d"
+#echo "disp livre=$d"
+#xdpyinfo -display :0.0 >lixo.txt
+#echo "XAUTHORITY=/var/run/gdm/auth-for-signey-X1h6no/database xdpyinfo -display :0.0 " >lixo.sh
 
-xdpyinfo -display :0.0 >lixo.txt
 
-echo "XAUTHORITY=/var/run/gdm/auth-for-signey-X1h6no/database xdpyinfo -display :0.0 " >lixo.sh
+echo "lxterminal &
+bash /usr/lib/shdm/loginTela.sh &
+exec metacity" >/var/lib/shdm/.xsession
 
-#startx -- :2
-bash
-echo "fechar sessão..."
-
+#############################
+echo "#!/bin/bash
+startx -- :$d
+rm -f $dr/login.sh
+" >$dr/login.sh
+chmod +x $dr/login.sh
+echo "shdm $! $(date +%s)" >$dr/sesao_$d
+su - shdm
+echo "saiu do 'su - shdm'"
